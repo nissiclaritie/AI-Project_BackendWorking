@@ -2,7 +2,7 @@ from flask import Flask, render_template, request
 import os
 from werkzeug.utils import secure_filename
 import face_validation.face_validation as fd
-
+from face_validation import  skin_tone as st
 
 
 app = Flask(__name__)
@@ -27,6 +27,16 @@ def post_file_upload():
         f.save(os.path.join(uploads_dir, secure_filename(f.filename)))
         angle, shape,image = fd.process_file(os.path.join(uploads_dir, secure_filename(f.filename)))
         rois = fd.roi_face(angle,shape,image)
+        tone = 'None'
+        try:
+            if rois !=None:
+
+                st.image_rgb(rois)
+                tone = 'None'
+        except Exception as ex:
+            tone = st.image_rgb(rois)
+            print(ex)
+        angle['Tone'] = tone
         return angle
 
 

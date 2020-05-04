@@ -72,10 +72,10 @@ def verify_angle(shape,rects):
 def detect_face(gray,image):
     # detect rectangle and mark on face
     rects = detector(gray, 1)
-    for k, d in enumerate(rects):
+    # for k, d in enumerate(rects):
         # print("Detection {}: Left: {} Top: {} Right: {} Bottom: {}".format(k, d.left(), d.top(), d.right(),
         #                                                                    d.bottom()))
-        image = cv2.rectangle(image, (d.left(), d.top()), (d.right(), d.bottom()), (255, 0, 255), 2)
+        # image = cv2.rectangle(image, (d.left(), d.top()), (d.right(), d.bottom()), (255, 0, 255), 2)
 
 
     # image = cv2.rectangle(image, (rects.left(), rects.top()), (rects.right(), rects.bottom()), (255, 0, 0) , 1)

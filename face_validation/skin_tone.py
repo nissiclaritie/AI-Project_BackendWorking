@@ -6,14 +6,14 @@ import cv2
 import numpy as np
 import math
 
-file = "data/Skintone Shades (2).xlsx"
+file = "/home/manoj/Downloads/office/makeup_ai/data/Skintone Shades (2).xlsx"
 data = pd.ExcelFile(file)
 print(data.sheet_names) #this returns the all the sheets in the excel file
 
 df = data.parse('Sheet1')
 
 
-ps = openpyxl.load_workbook('data/Skintone Shades (2).xlsx')
+ps = openpyxl.load_workbook('/home/manoj/Downloads/office/makeup_ai/data/Skintone Shades (2).xlsx')
 
 sheet = ps['Sheet1']
 
@@ -41,30 +41,39 @@ for data in range(len(list_shade)):
   dict_temp[list_shade[data]] = new_list[data]
 print(dict_temp)
 
-new = []
-myimg = cv2.imread('/content/unnamed2.jpg', cv2.IMREAD_COLOR)
-channels = cv2.mean(myimg)
-observation = np.array((channels[2], channels[1], channels[0])).tolist()
-for i in observation:
-  new.append(math.trunc(i))
-print(new)
 
 def find_closest(new):
   r, g, b = new
   color_diffs = []
   for color in new_list:
-      cr, cg, cb = color
-      color_diff = math.sqrt(abs(r - cr)**2 + abs(g - cg)**2 + abs(b - cb)**2)
-      color_diffs.append((color_diff, color))
+    cr, cg, cb = color
+    color_diff = math.sqrt(abs(r - cr) ** 2 + abs(g - cg) ** 2 + abs(b - cb) ** 2)
+    color_diffs.append((color_diff, color))
   return min(color_diffs)[1]
 
-values = dict_temp.items()
-keys = dict_temp.keys()
-for key, value in dict_temp.items():
-  if value == new:
-    print(key)
-  else:
-    new_out = find_closest(new)
-    if value == new_out:
-      # print(value)
+def image_rgb(myimg):
+
+  new = []
+  myimg = myimg
+  channels = cv2.mean(myimg)
+  observation = np.array((channels[2], channels[1], channels[0])).tolist()
+  for i in observation:
+    new.append(math.trunc(i))
+  print(new)
+
+
+
+  values = dict_temp.items()
+  keys = dict_temp.keys()
+  for key, value in dict_temp.items():
+    if value == new:
       print(key)
+    else:
+      new_out = find_closest(new)
+      if value == new_out:
+        # print(value)
+        print(key)
+
+  return  key
+
+# image_rgb('/home/manoj/Downloads/office/makeup_ai/data/images/example_01.jpg')
