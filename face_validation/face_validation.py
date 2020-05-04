@@ -110,8 +110,8 @@ def detect_landmarks(rects,gray,image):
             (x, y, w, h) = cv2.boundingRect(np.array([shape[i:j]]))
 
             dict_lm[name] = (x, y, w, h)
-        output = face_utils.visualize_facial_landmarks(image, shape)
-        return output,shape
+        # output = face_utils.visualize_facial_landmarks(image, shape)
+        return shape
 
 
 def roi_face(angle,shape,image):
@@ -149,7 +149,7 @@ def process_file(filename):
     image , rects = detect_face(gray,image)
     if len(rects)>0:
 
-        outimage,shape = detect_landmarks(rects,gray,image)
+        shape = detect_landmarks(rects,gray,image)
         angle = verify_angle(shape,rects)
         return angle,shape,image
     else:

@@ -25,16 +25,17 @@ def post_file_upload():
     if request.method == "POST":
         f = request.files['file']
         f.save(os.path.join(uploads_dir, secure_filename(f.filename)))
+        # exit()
         angle, shape,image = fd.process_file(os.path.join(uploads_dir, secure_filename(f.filename)))
         rois = fd.roi_face(angle,shape,image)
         tone = 'None'
         try:
             if rois !=None:
-
                 st.image_rgb(rois)
                 tone = 'None'
         except Exception as ex:
             tone = st.image_rgb(rois)
+            print(tone)
             print(ex)
         angle['Tone'] = tone
         return angle
