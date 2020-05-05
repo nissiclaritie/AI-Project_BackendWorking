@@ -14,7 +14,6 @@ ps = openpyxl.load_workbook(file)
 
 sheet = ps['Sheet1']
 
-
 dict_temp = {}
 list_rgb = []
 list_shade = []
@@ -76,7 +75,7 @@ def image_rgb(myimg):
             new_out = find_closest(new)
             if value == new_out:
                 closest_colors = sorted(new_list, key=lambda color: distance(color, new))
-            for obs in range(4):
+            for obs in range(3):
                 if closest_colors:
                     closest_color = closest_colors[obs]
                     if closest_color == value:

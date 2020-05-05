@@ -4,6 +4,7 @@ from werkzeug.utils import secure_filename
 import face_validation.face_validation as fd
 from face_validation import skin_tone as st
 from face_validation import whitebalance_fix as wt
+import cv2 as cv
 
 app = Flask(__name__)
 
@@ -23,9 +24,11 @@ def post_file_upload():
     if request.method == "POST":
         f = request.files['file']
         f.save(os.path.join(uploads_dir, secure_filename(f.filename)))
-        angle, shape, image = fd.process_file(os.path.join(uploads_dir, secure_filename(f.filename)))
+        file_name = os.path.join(uploads_dir, secure_filename(f.filename))
+        angle, shape, image = fd.process_file(file_name)
+        image = wt.white_balance(image)
+        cv.imwrite(str(file_name), image)
         rois = fd.roi_face(angle, shape, image)
-        rois = wt.refsize_image(rois)
         tone = 'None'
         try:
             if rois != None:
@@ -38,4 +41,4 @@ def post_file_upload():
 
 
 if __name__ == '__main__':
-    app.run(port=5500, debug=True)
+    app.run(port=8010, debug=True)
