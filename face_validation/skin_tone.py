@@ -14,7 +14,6 @@ ps = openpyxl.load_workbook(file)
 
 sheet = ps['Sheet1']
 
-# sheet.max_row
 
 dict_temp = {}
 list_rgb = []
@@ -33,14 +32,9 @@ for j in range(0, len(list_rgb)):
     for i in range(0, len(test_list)):
         test_list[i] = int(test_list[i])
     new_list.append(test_list)
-print(new_list)
 
 for data in range(len(list_shade)):
     dict_temp[list_shade[data]] = new_list[data]
-print(dict_temp)
-
-
-# print(dict_temp)
 
 
 def find_closest(new):
@@ -66,7 +60,6 @@ def image_rgb(myimg):
     observation = np.array((channels[2], channels[1], channels[0])).tolist()
     for obs in observation:
         new.append(math.trunc(obs))
-    print(new)
 
     values = dict_temp.items()
     keys = dict_temp.keys()
@@ -79,20 +72,13 @@ def image_rgb(myimg):
                 closest_color = closest_colors[obs]
                 if closest_color == value:
                     key_temp.append(key)
-            # print(key)
         else:
             new_out = find_closest(new)
-            print(new_out)
             if value == new_out:
                 closest_colors = sorted(new_list, key=lambda color: distance(color, new))
-                print(closest_colors)
             for obs in range(4):
                 if closest_colors:
                     closest_color = closest_colors[obs]
-                    # print(closest_color)
                     if closest_color == value:
                         key_temp.append(key)
-    print(key_temp)
     return key_temp
-
-# image_rgb('/home/manoj/Downloads/office/makeup_ai/data/images/example_01.jpg')
