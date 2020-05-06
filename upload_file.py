@@ -26,7 +26,7 @@ def post_file_upload():
         f.save(os.path.join(uploads_dir, secure_filename(f.filename)))
         file_name = os.path.join(uploads_dir, secure_filename(f.filename))
         angle, shape, image = fd.process_file(file_name)
-        image = wt.white_balance(image)
+        # image = wt.white_balance(image)
         cv.imwrite(str(file_name), image)
         rois = fd.roi_face(angle, shape, image)
         tone = 'None'
