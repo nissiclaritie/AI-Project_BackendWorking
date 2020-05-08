@@ -41,4 +41,4 @@ def post_file_upload():
 
 
 if __name__ == '__main__':
-    app.run(port=5500, debug=True)
+    app.run(port=8010, debug=True)
