@@ -69,15 +69,18 @@ def image_rgb(myimg):
             closest_colors = sorted(new_list, key=lambda color: distance(color, new))
             for obs in range(3):
                 closest_color = closest_colors[obs]
-                if closest_color == value:
-                    key_temp.append(key)
+                for key, value in dict_temp.items():
+                    if closest_color == value:
+                        key_temp.append(key)
         else:
             new_out = find_closest(new)
             if value == new_out:
                 closest_colors = sorted(new_list, key=lambda color: distance(color, new))
+                print(closest_colors)
             for obs in range(3):
                 if closest_colors:
                     closest_color = closest_colors[obs]
-                    if closest_color == value:
-                        key_temp.append(key)
+                    for key, value in dict_temp.items():
+                        if closest_color == value:
+                            key_temp.append(key)
     return key_temp

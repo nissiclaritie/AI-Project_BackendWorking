@@ -8,12 +8,34 @@ import imutils
 detector = dlib.get_frontal_face_detector()
 predictor = dlib.shape_predictor('face_validation/shape_predictor_81_face_landmarks.dat')
 
+print(face_utils.FACIAL_LANDMARKS_IDXS['jaw'])
+
 
 def verify_angle(shape, rects):
     (lStart, lEnd) = face_utils.FACIAL_LANDMARKS_IDXS["left_eye"]
     (rStart, rEnd) = face_utils.FACIAL_LANDMARKS_IDXS["right_eye"]
+    # print(face_utils.FACIAL_LANDMARKS_IDXS[])
+    # midPts = shape[39:42]
+    # output = face_utils.visualize_facial_landmarks(image, shape)
+
+    # from here
+    endl = shape[45]
+    endr = shape[36]
+    nose = shape[27]
+    # dY = endl[1] - endr[1]
+    ll = endl[0] - nose[0]
+    lr = nose[0] - endr[0]
+    # print(ll, lr)
+    distance_eye = lr - ll
+    print(distance_eye)
+    # to here is the change
+
     leftEyePts = shape[lStart:lEnd]
     rightEyePts = shape[rStart:rEnd]
+    # print(leftEyePts)
+    # print(rightEyePts)
+
+    # jaw_line = shape[]
     # compute the center of mass for each eye
     leftEyeCenter = leftEyePts.mean(axis=0).astype("int")
     rightEyeCenter = rightEyePts.mean(axis=0).astype("int")
@@ -21,6 +43,7 @@ def verify_angle(shape, rects):
     dY = rightEyeCenter[1] - leftEyeCenter[1]
     dX = rightEyeCenter[0] - leftEyeCenter[0]
     angle = np.degrees(np.arctan2(dY, dX)) - 180
+    print(angle)
 
     # check for angle of forehead
 
@@ -33,9 +56,10 @@ def verify_angle(shape, rects):
     headangle = np.degrees(np.arctan2(dY, dX)) - 180
 
     (lStart, lEnd) = face_utils.FACIAL_LANDMARKS_IDXS["jaw"]
-
+    # print(lStart, lEnd)
     jawpt = shape[lStart:lEnd + 1]
-
+    # print(jawpt)
+    # cv2.imshow(jawpt,"frame")
     # compute the center of mass for each eye
     jawpts = jawpt[0:int(len(jawpt) / 2)].mean(axis=0).astype("int")
     jawpts2 = jawpt[int(len(jawpt) / 2):].mean(axis=0).astype("int")
@@ -43,12 +67,21 @@ def verify_angle(shape, rects):
     dY = jawpts2[1] - jawpts[1]
     dX = jawpts2[0] - jawpts[0]
     jawangle = np.degrees(np.arctan2(dY, dX)) - 180
+    print(jawangle)
+    endl = shape[13]
+    endr = shape[36]
+    nose = shape[30]
+    # dY = endl[1] - endr[1]
+    ll = endl[0] - nose[0]
+    lr = nose[0] - endr[0]
+    print(ll, lr)
+    distance_cheeks = lr - ll
+    print(distance_cheeks)
 
     angle_res = {}
     # conditions to validate the angles
-    if 0.0 <= abs(angle) <= 2.5 or 356.0 <= abs(angle) <= 360.0:
+    if 0.0 <= abs(angle) <= 2.5 or 356.0 <= abs(angle) <= 360.0 or abs(distance_eye) < 15:
         angle_res['eye'] = 'Passed'
-
     else:
         angle_res['eye'] = 'Failed'
 
@@ -58,12 +91,10 @@ def verify_angle(shape, rects):
     else:
         angle_res['head'] = 'Failed'
 
-    if 185.0 <= abs(jawangle) <= 194.0:
+    if 185.0 <= abs(jawangle) <= 194.0 or abs(distance_cheeks) < 75:
         angle_res['jaw'] = 'Passed'
-
     else:
         angle_res['jaw'] = 'Failed'
-
     return angle_res
 
 
