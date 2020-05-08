@@ -70,7 +70,7 @@ def image_rgb(myimg):
             for obs in range(3):
                 closest_color = closest_colors[obs]
                 for key, value in dict_temp.items():
-                    if closest_color == value:
+                    if closest_color == value and key not in key_temp:
                         key_temp.append(key)
         else:
             new_out = find_closest(new)
@@ -81,6 +81,6 @@ def image_rgb(myimg):
                 if closest_colors:
                     closest_color = closest_colors[obs]
                     for key, value in dict_temp.items():
-                        if closest_color == value:
+                        if closest_color == value and key not in key_temp:
                             key_temp.append(key)
     return key_temp
