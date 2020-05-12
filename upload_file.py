@@ -28,14 +28,17 @@ def post_file_upload():
         angle, shape, image = fd.process_file(file_name)
         image = wt.white_balance(image)
         cv.imwrite(str(file_name), image)
-        rois = fd.roi_face(angle, shape, image)
+        try:
+            rois_head, roi_left_cheek, roi_right_cheek = fd.roi_face(angle, shape, image)
+        except:
+            rois_head = roi_left_cheek = roi_right_cheek = 1
         tone = 'None'
         try:
-            if rois != None:
-                st.image_rgb(rois)
+            if rois_head != None and roi_left_cheek != None and roi_right_cheek != None:
+                # st.image_rgb(rois_head, roi_left_cheek, roi_right_cheek)
                 tone = 'None'
         except Exception as ex:
-            tone = st.image_rgb(rois)
+            tone = st.image_rgb(rois_head, roi_left_cheek, roi_right_cheek)
         angle['Tone'] = tone
         return angle
 

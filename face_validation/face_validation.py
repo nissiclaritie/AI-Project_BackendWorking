@@ -152,13 +152,36 @@ def roi_face(angle, shape, image):
         (blx, bly) = shape[20]
         (brx, bry) = shape[23]
 
+        (tlxcl, tlycl) = shape[1]
+        (trxcl, tRycl) = shape[28]
+        (blxcl, blycl) = shape[3]
+        (brxcl, brycl) = shape[30]
+
+        (tlxcr, tlycr) = shape[28]
+        (trxcr, tRycr) = shape[15]
+        (blxcr, blycr) = shape[30]
+        (brxcr, brycr) = shape[13]
+
         x1 = min(tlx, trx, brx, blx)
         x2 = max(tlx, trx, brx, blx)
         y1 = min(tly, tRy, bry, bly)
         y2 = max(tly, tRy, bry, bly)
+
+        x1cl = min(tlxcl, trxcl, brxcl, blxcl)
+        x2cl = max(tlxcl, trxcl, brxcl, blxcl)
+        y1cl = min(tlycl, tRycl, brycl, blycl)
+        y2cl = max(tlycl, tRycl, brycl, blycl)
+
+        x1cr = min(tlxcr, trxcr, brxcr, blxcr)
+        x2cr = max(tlxcr, trxcr, brxcr, blxcr)
+        y1cr = min(tlycr, tRycr, brycr, blycr)
+        y2cr = max(tlycr, tRycr, brycr, blycr)
         # roi_forehead = image[x2:y2,x1:y1] #int(r[1]):int(r[1]+r[3]), int(r[0]):int(r[0]+r[2])
         roi_forehead = image[y1:y2, x1:x2]
-        return roi_forehead
+        roi_left_cheek = image[y1cl:y2cl, x1cl:x2cl]
+        roi_right_cheek = image[y1cr:y2cr, x1cr:x2cr]
+
+        return roi_forehead, roi_left_cheek, roi_right_cheek
     # cv2.imshow('roiim', roi_forehead)
     # cv2.waitKey(0)
 

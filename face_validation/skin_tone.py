@@ -52,10 +52,24 @@ def distance(c1, c2):
     return math.sqrt((r1 - r2) ** 2 + (g1 - g2) ** 2 + (b1 - b2) ** 2)
 
 
-def image_rgb(myimg):
+def image_rgb(myimg_head, myimg_left_cheek, myimg_right_cheek):
     new = []
-    myimg = myimg
-    channels = cv2.mean(myimg)
+    channels = []
+    # myimg = myimg
+    channels1 = cv2.mean(myimg_head)
+    channels2 = cv2.mean(myimg_left_cheek)
+    channels3 = cv2.mean(myimg_right_cheek)
+    # if myimg_head:
+    #     channels1 = (0, 0, 0, 0)
+    # if myimg_left_cheek == None:
+    #     channels2 = (0, 0, 0, 0)
+    # if myimg_right_cheek == None:
+    #     channels3 = (0, 0, 0, 0)
+    for i in range(0, 3):
+        print(i)
+        channels.append((channels1[i] + channels2[i] + channels3[i]) / 3)
+    print(channels)
+    # print("This is the channels"+str(channels1))
     observation = np.array((channels[2], channels[1], channels[0])).tolist()
     for obs in observation:
         new.append(math.trunc(obs))
