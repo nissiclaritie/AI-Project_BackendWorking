@@ -1,0 +1,9 @@
+version: 0.0 
+os: linux 
+files: 
+  - source: / 
+    destination: /home/ubuntu/aiprojectphase1/
+permissions: 
+  - object: /var/www/aiprojectphase1/
+    owner: ubuntu
+    group: ubuntu
