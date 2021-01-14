@@ -196,11 +196,10 @@ def process_file(filename):
     image = imutils.resize(image, width=500)
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     image, rects = detect_face(gray, image)
-    if len(rects) > 0:
-
+    if len(rects) >= 1:
         shape = detect_landmarks(rects, gray, image)
         angle = verify_angle(shape, rects)
-        return angle, shape, image
+        return angle, shape, image, len(rects)
     else:
         return False
 

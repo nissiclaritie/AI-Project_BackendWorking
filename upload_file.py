@@ -25,9 +25,11 @@ def post_file_upload():
         f = request.files['file']
         f.save(os.path.join(uploads_dir, secure_filename(f.filename)))
         file_name = os.path.join(uploads_dir, secure_filename(f.filename))
-        angle, shape, image = fd.process_file(file_name)
+        angle, shape, image, numfaces = fd.process_file(file_name)
+        if numfaces > 1:
+            angle['error'] = '11' #error code for photos containing multiple faces
         image = wt.white_balance(image)
-        #cv.imwrite(str(file_name), image)
+        os.remove(file_name)
         try:
             rois_head, roi_left_cheek, roi_right_cheek = fd.roi_face(angle, shape, image)
         except:
