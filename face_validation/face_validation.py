@@ -189,6 +189,34 @@ def roi_face(angle, shape, image):
 
     pass
 
+def detect_oexposure(gray, white_thresh, thresh_pct_limit, landmarks):
+    bbox = []
+    flag = 0
+
+    # Specify points for face boundary
+    lower_part = landmarks[0:17]
+    upper_part = np.array([landmarks[78], landmarks[74], landmarks[79], landmarks[73],
+                           landmarks[72], landmarks[80], landmarks[71], landmarks[70], landmarks[69],
+                           landmarks[68], landmarks[76], landmarks[75], landmarks[77]])
+    face = np.array(np.concatenate((lower_part, upper_part)))
+
+    # Create a black mask
+    mask = np.zeros(gray.shape[0:2], dtype=np.uint8)
+    points = np.array(face)
+
+    # Trace contours on the mask in the shape of face
+    cv2.drawContours(mask, [points], -1, (255, 255, 255), -1, cv2.LINE_AA)
+    res = cv2.bitwise_and(gray, gray, mask=mask)
+    rect = cv2.boundingRect(points)
+    cropped = res[rect[1]:rect[1] + rect[3], rect[0]:rect[0] + rect[2]]
+    thresh_pct = (np.sum(res >= white_thresh) / np.sum(mask >= white_thresh) * 100)
+
+    #Check against threshold limit and return error if it exceeds the limit
+    if thresh_pct > thresh_pct_limit:
+        flag = 2
+
+    return flag
+
 
 def process_file(filename):
     # read image and convert to gray scale for next steps
@@ -196,10 +224,15 @@ def process_file(filename):
     image = imutils.resize(image, width=500)
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     image, rects = detect_face(gray, image)
-    if len(rects) >= 1:
+    if len(rects) == 1:
+        shape = detect_landmarks(rects,gray,image)
+        error_code = detect_oexposure(gray,220,22.1,shape)
+        angle = verify_angle(shape,rects)
+        return angle, shape, image, str(error_code)
+    if len(rects) > 1:
         shape = detect_landmarks(rects, gray, image)
         angle = verify_angle(shape, rects)
-        return angle, shape, image, len(rects)
+        return angle, shape, image, '11'
     else:
         return False
 

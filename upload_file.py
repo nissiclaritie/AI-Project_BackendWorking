@@ -25,9 +25,8 @@ def post_file_upload():
         f = request.files['file']
         f.save(os.path.join(uploads_dir, secure_filename(f.filename)))
         file_name = os.path.join(uploads_dir, secure_filename(f.filename))
-        angle, shape, image, numfaces = fd.process_file(file_name)
-        if numfaces > 1:
-            angle['error'] = '11' #error code for photos containing multiple faces
+        angle, shape, image, error_code = fd.process_file(file_name)
+        angle['error'] = error_code
         image = wt.white_balance(image)
         os.remove(file_name)
         try:
@@ -41,6 +40,7 @@ def post_file_upload():
                 tone = 'None'
         except Exception as ex:
             tone = st.image_rgb(rois_head, roi_left_cheek, roi_right_cheek)
+        print(angle)
         angle['Tone'] = tone
         return angle
 
