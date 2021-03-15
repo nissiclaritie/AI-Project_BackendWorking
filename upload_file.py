@@ -26,6 +26,18 @@ def post_file_upload():
         f.save(os.path.join(uploads_dir, secure_filename(f.filename)))
         file_name = os.path.join(uploads_dir, secure_filename(f.filename))
         angle, shape, image, error_code = fd.process_file(file_name)
+
+        if error_code == '10':
+            print(error_code)
+            angle = {'eye':'Failed',
+                     'head' : 'Failed',
+                     'jaw':'Failed',
+                     'error': '10',
+                     'Tone': 'None'
+                     }
+            print(angle)
+            return angle
+
         angle['error'] = error_code
         image = wt.white_balance(image)
         os.remove(file_name)

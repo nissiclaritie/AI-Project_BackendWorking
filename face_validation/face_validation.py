@@ -233,6 +233,8 @@ def process_file(filename):
         shape = detect_landmarks(rects, gray, image)
         angle = verify_angle(shape, rects)
         return angle, shape, image, '11'
+    if len(rects)==0:
+        return None, None, None, '10'
     else:
         return False
 
